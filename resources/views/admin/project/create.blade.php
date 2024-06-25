@@ -33,6 +33,16 @@
             </div>
 
             <div class="my-3">
+                <label class="form-label" for="technology_id">Tecnologie utilizzate</label>
+                <select class="form-select" name="technology_id" id="technology_id">
+                    <option value="">Seleziona</option>
+                    @foreach ($technologies as $tech)
+                        <option multiple @selected(old('technology_id') == $tech->id) value="{{$tech->id}}">{{$tech->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="my-3">
                 <label for="description" class="form-label">Descrizione</label>
                 <textarea class="form-control @error('description')
                     is-invalid

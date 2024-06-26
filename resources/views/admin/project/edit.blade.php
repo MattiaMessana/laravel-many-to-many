@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container mt-3">
-        <h2>Modifica Proggetto</h2>
+        <h2>Modifica Progetto</h2>
         <form action="{{ route('admin.project.update' , $project )}}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
@@ -27,9 +27,28 @@
                 <select class="form-select" name="category_id" id="category_id">
                     <option value="">Seleziona</option>
                     @foreach ($categories as $category)
-                        <option @selected($project->category->id == $category->id) value="{{$category->id}}">{{$category?->name}}</option>
+                        <option @selected(old('category_id', $project->category?->id) == $category->id) value="{{$category->id}}">{{$category->name}}</option>
                     @endforeach
                 </select>
+            </div>
+
+            <div class="my-3">
+                <p>Seleziona technologie utilizzate </p>
+                <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                    @foreach ($technologies as $technology)
+
+                    @if (old('technologies') != null)
+                    {{-- gestione dellgi errori --}}
+                        <input @checked(in_array($technology->id, old('technologies', []))) type="checkbox" class="btn-check" id="tech-{{ $technology->id }}" name="technologies[]" value="{{ $technology->id }}">
+                    @else
+                    {{-- visualizzazzione collection technologie  --}}
+                    <input @checked($project->technologies->contains($technology)) type="checkbox" class="btn-check" id="tech-{{ $technology->id }}" name="technologies[]" value="{{ $technology->id }}">
+                    @endif
+
+                    <label class="btn btn-outline-primary" for="tech-{{ $technology->id }}">{{ $technology->name }}</label>
+
+                    @endforeach
+                </div>
             </div>
 
             <div class="my-3">

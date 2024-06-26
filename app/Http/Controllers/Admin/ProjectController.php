@@ -40,6 +40,7 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request)
     {
         // $data = $request->all();
+
         $data = $request->validated();
         //controlliamo se esiste il file cover_img nel request
         if ($request->hasFile('cover_img')) {
@@ -54,6 +55,11 @@ class ProjectController extends Controller
         $project->slug = Str::slug($request->title);
         // dd($request->all(), $data, $project);
         $project->save();
+
+        if ($request->has('technologies')) {
+            $project->technologies()->attach($request->technologies);
+        }
+
         return redirect()->route('admin.project.show', ['project' => $project->slug]);
     }
 
@@ -62,6 +68,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        
         return view('admin.project.show' , compact('project'));
     }
 
@@ -71,7 +78,9 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $categories = Category::all();
-        return view('admin.project.edit' , compact('project' , 'categories'));
+        $technologies = Technology::all();
+        
+        return view('admin.project.edit' , compact('project' , 'categories', 'technologies'));
     }
 
     /**
@@ -98,6 +107,8 @@ class ProjectController extends Controller
 
         $project->update($data);
 
+        $project->technologies()->sync($request->technologies);
+
         return redirect()->route('admin.project.show' , ['project' => $project->slug])->with('message' , 'Proggetto ' .$project->title. ' è stato modificato');
     }
 
@@ -110,6 +121,8 @@ class ProjectController extends Controller
         if ($project->cover_img) {
             Storage::delete($project->cover_img);
         }
+
+        $project->technologies()->detach();
         $project->delete();
         return redirect()->route('admin.project.index')->with('message', 'Proggetto ' .$project->title.' è stato eliminato');
     }

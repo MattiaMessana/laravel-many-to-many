@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <h2 class="mt-4">Inserisci un nuovo proggetto</h2>
+        <h2 class="mt-4">Inserisci un nuovo progetto</h2>
 
         <form action="{{ route('admin.project.store')}}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -32,15 +32,18 @@
                 </select>
             </div>
 
+
             <div class="my-3">
-                <label class="form-label" for="technology_id">Tecnologie utilizzate</label>
-                <select class="form-select" name="technology_id" id="technology_id">
-                    <option value="">Seleziona</option>
-                    @foreach ($technologies as $tech)
-                        <option multiple @selected(old('technology_id') == $tech->id) value="{{$tech->id}}">{{$tech->name}}</option>
+                <p>Seleziona technologie utilizzate </p>
+                <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                    @foreach ($technologies as $technology)
+                    <input @checked(in_array($technology->id, old('technologies', []))) type="checkbox" class="btn-check" id="tech-{{ $technology->id }}" name="technologies[]" value="{{ $technology->id }}">
+                    <label class="btn btn-outline-primary" for="tech-{{ $technology->id }}">{{ $technology->name }}</label>
                     @endforeach
-                </select>
+                </div>
             </div>
+
+
 
             <div class="my-3">
                 <label for="description" class="form-label">Descrizione</label>

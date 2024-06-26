@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="mt-4">
-        <h2 class="mb-3">Lista Proggetti</h2>
+        <h2 class="mb-3">Lista Progetti</h2>
 
         @if (session('message'))
             <div class="alert alert-success">
